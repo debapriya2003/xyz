@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from PIL import Image
 from io import BytesIO
-API_URL = "https://api.nekosapi.com/v4/images"
+API_URL = "https://api.nekosapi.com/v4/images/random"
 def fetch_random_images(limit=6):
     try:
         params = {"limit": limit}
