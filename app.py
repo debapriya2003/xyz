@@ -2,8 +2,8 @@ import streamlit as st
 import requests
 from PIL import Image
 from io import BytesIO
-API_URL = "https://api.nekosapi.com/v4/images/"
-def fetch_random_images(limit=100):
+API_URL = "https://api.nekosapi.com/v4/images/random"
+def fetch_random_images(limit=6):
     try:
         params = {"limit": limit}
         response = requests.get(API_URL, params=params)
@@ -32,7 +32,7 @@ def main():
     st.title("Anime Wallpaper Grid 🎨")
     st.markdown("Discover anime wallpapers!")
     # Inputs to control the number of images
-    limit = st.slider("Select number of images", 1, 100, 6)
+    limit = st.slider("Select number of images", 1, 12, 6)
     # Fetch button to get random anime wallpapers
     if st.button("Fetch Random Wallpapers"):
         image_urls = fetch_random_images(limit=limit)
