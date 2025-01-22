@@ -7,15 +7,17 @@ from io import BytesIO
 st.title("Anime Wallpaper App")
 
 # Function to fetch images from the API
-def fetch_images():
-    url = "https://waifu.pics/waifu/random"
+def fetch_images(count=100):
+    url = "https://api.waifu.pics/sfw/waifu"
+    images = []
     try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            if "url" in data:
-                return [data["url"]]
-        return []
+        for _ in range(count):
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = response.json()
+                if "url" in data:
+                    images.append(data["url"])
+        return images
     except Exception as e:
         st.error(f"Error fetching images: {e}")
         return []
@@ -40,9 +42,6 @@ else:
             response = requests.get(image_url)
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
-                if st.button("View Fullscreen", key=index):
-                    st.image(image, use_container_width=True, caption="Anime Wallpaper")
-                else:
-                    st.image(image, use_container_width=True)
+                st.image(image, use_column_width=True)
             else:
                 st.error("Failed to load image.")
