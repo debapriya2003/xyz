@@ -41,8 +41,8 @@ else:
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
                 if st.button("View Fullscreen", key=index):
-                    st.image(image, use_column_width=True, caption="Anime Wallpaper")
+                    st.image(image, use_container_width=True, caption="Anime Wallpaper")
                 else:
-                    st.image(image, use_column_width=True)
+                    st.image(image, use_container_width=True)
             else:
                 st.error("Failed to load image.")
