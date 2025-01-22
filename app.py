@@ -8,7 +8,7 @@ st.title("Anime Wallpaper App")
 
 # Function to fetch images from the API
 def fetch_images(count=100):
-    url = "https://api.waifu.pics/sfw/waifu"
+    url = "https://api.waifu.pics/nsfw/waifu"
     images = []
     try:
         for _ in range(count):
@@ -42,6 +42,6 @@ else:
             response = requests.get(image_url)
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
-                st.image(image, use_column_width=True)
+                st.image(image, use_container_width=True)
             else:
                 st.error("Failed to load image.")
