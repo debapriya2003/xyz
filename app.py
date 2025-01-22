@@ -2,42 +2,47 @@ import streamlit as st
 import requests
 from PIL import Image
 from io import BytesIO
-API_URL = "https://api.nekosapi.com/v4/images/random"
-def fetch_random_images(limit=6):
+
+# Set up the app title
+st.title("Anime Wallpaper App")
+
+# Function to fetch images from the API
+def fetch_images():
+    url = "https://api.waifu.pics/sfw/waifu"
     try:
-        params = {"limit": limit}
-        response = requests.get(API_URL, params=params)
+        response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            if "items" in data:
-                image_urls = [item['url'] for item in data['items']]
-                return image_urls
-            else:
-                st.error("No images found in the response.")
-                return None
-        else:
-            st.error(f"Failed to fetch images. Status code: {response.status_code}")
-            return None
+            if "url" in data:
+                return [data["url"]]
+        return []
     except Exception as e:
-        st.error(f"Failed to fetch images: {str(e)}")
-        return None
-def display_image_grid(image_urls):
+        st.error(f"Error fetching images: {e}")
+        return []
+
+# State to store fetched images
+if "image_list" not in st.session_state:
+    st.session_state.image_list = []
+
+# Button to refresh images
+if st.button("Refresh Wallpapers"):
+    st.session_state.image_list = fetch_images()
+
+# Display loading message while images are being fetched
+if not st.session_state.image_list:
+    st.write("No images available. Click 'Refresh Wallpapers' to fetch.")
+else:
+    st.write("### Anime Wallpapers")
     cols = st.columns(3)
-    for i, image_url in enumerate(image_urls):
-        col = cols[i % 3]  # Cycle through the columns
-        with col:
-            st.image(image_url, use_container_width=True)
-# Main layout
-def main():
-    st.title("Anime Wallpaper Grid 🎨")
-    st.markdown("Discover anime wallpapers!")
-    # Inputs to control the number of images
-    limit = st.slider("Select number of images", 1, 12, 6)
-    # Fetch button to get random anime wallpapers
-    if st.button("Fetch Random Wallpapers"):
-        image_urls = fetch_random_images(limit=limit)
-        if image_urls:
-            display_image_grid(image_urls)
-# Run the Streamlit app
-if __name__ == "__main__":
-    main()
+    for index, image_url in enumerate(st.session_state.image_list):
+        with cols[index % 3]:
+            # Display the image as a thumbnail
+            response = requests.get(image_url)
+            if response.status_code == 200:
+                image = Image.open(BytesIO(response.content))
+                if st.button("View Fullscreen", key=index):
+                    st.image(image, use_column_width=True, caption="Anime Wallpaper")
+                else:
+                    st.image(image, use_column_width=True)
+            else:
+                st.error("Failed to load image.")
