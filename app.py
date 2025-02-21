@@ -8,7 +8,7 @@ st.title("Anime Wallpaper App")
 
 # Function to fetch images from the API
 def fetch_images(count=100):
-    url = "https://api.waifu.pics/nsfw/waifu"
+    url = "https://api.waifu.pics/sfw/waifu"
     images = []
     try:
         for _ in range(count):
